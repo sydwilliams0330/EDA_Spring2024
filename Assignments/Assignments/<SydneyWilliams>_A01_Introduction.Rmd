@@ -22,15 +22,15 @@ Enter answers to the questions just below the >Answer: prompt.
 
 1. What are your previous experiences with data analytics, R, and Git? Include both formal and informal training.
 
-> Answer: 
+> Answer: I have a very basic experience with R from 4 years ago, but do not remember much. I have used Github in Modeling for Energy Systems last year and a college class on Intro to Computer Science. 
 
 2. Are there any components of the course about which you feel confident?
 
-> Answer: 
+> Answer: No!
 
 3. Are there any components of the course about which you feel apprehensive?
 
-> Answer: 
+> Answer: Coding doesn't come easy for me, but I am ready to challenge myself.
 
 
 ## 2) GitHub
