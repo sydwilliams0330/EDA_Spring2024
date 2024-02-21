@@ -45,7 +45,7 @@ Set the following R code chunk so that it runs when knit, but no messages, error
 
 ```{r project.setup, echo = TRUE, results = "HIDE",  message = FALSE,  warning = FALSE }
 #Import libraries
-library(tidyverse);library(lubridate);library(here);library(knitr)
+library(tidyverse);library(lubridate);library(here);library(knitr);library(dplyr)
 
 #Import EPA data (from the processed_KEY folder) & fix dates
 epa_data <- read.csv(
@@ -90,8 +90,8 @@ summary_Ozone <- epa_data %>%
   arrange(mean_Ozone)
 
 #Use the `kable` function to produce the 2 tables in markdown format
-knitr::kable(summary_PM25,caption = "Mean Particulates (2.5mm)", col.names = c("County", "µg/m3"))
-knitr::kable(summary_Ozone, caption = "Mean Ozone", col.names = c("County", "µg/m3"))
+knitr::kable(summary_PM25,caption = "Mean Particulates (2.5mm)", col.names = c("County", "$\\mu g/m^3$"))
+knitr::kable(summary_Ozone, caption = "Mean Ozone", col.names = c("County", "$\\mu g/m^3$"))
 ```
 
 ---
@@ -100,18 +100,18 @@ knitr::kable(summary_Ozone, caption = "Mean Ozone", col.names = c("County", "µg
 
 Create two separate code chunks that create boxplots of the distribution of Ozone levels by month using, one for only records collected in 2018 and one for records in 2019. Customize the chunk options such that the final figures are displayed but not the code used to generate the figures. In addition, align the plots on the left side of the page and set the figure heights so both plots fit on the same page with minimal space remaining. Lastly, add a `fig.cap` chunk option to add a caption (title) to your plot that will display underneath the figure.
 
-``` {r 2018 Ozone Levels, echo=FALSE, results='hide', fig.align='left', fig.height=5, fig.cap='2018 Ozone values by month'}
+``` {r 2018 Ozone Levels, echo=FALSE, results='hide', fig.align='left', fig.width= 8,fig.cap='2018 Ozone values by month'}
 
 # Dataframe for subset of records collected in 2018 
 Ozonedata_2018 <- subset(epa_data, Year == 2018)
 
-
 # Create the boxplot of distribution of Ozone levels by month using only records collected in 2018 
-boxplot(Ozone ~ Month, data = Ozonedata_2018, xlab = "Month", ylab = "Concentration (µg/m3)", names =c("Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), main = "Ozone Levels - 2018")
+boxplot(Ozone ~ Month, data = Ozonedata_2018, xlab = "Month", ylab = "Concentration (µg/m3)", names =c("Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"),main = "Ozone Levels - 2018")
+
 
 ```
 
-``` {r 2019 Ozone Levels, echo=FALSE, results='hide', fig.align='left', fig.height=5, fig.cap='2019 Ozone values by month'}
+``` {r 2019 Ozone Levels, echo=FALSE, results='hide', fig.align='left', fig.width = 8, fig.cap='2019 Ozone values by month'}
 # Dataframe for subset of records collected in 2018 
 Ozonedata_2019 <- subset(epa_data, Year == 2019)
 
@@ -124,4 +124,4 @@ boxplot(Ozone ~ Month, data = Ozonedata_2019, xlab = "Month", ylab = "Concentrat
 Add a table of contents and list of figures to your document and knit to a PDF. Submit your PDF to Sakai, but also be sure to commit and push your Rmd file used to create this knit document to GitHub. In the section below, add a link to your GitHub repository. 
 
 ## Git Repository
-
+https://github.com/sydwilliams0330/EDA_Spring2024
