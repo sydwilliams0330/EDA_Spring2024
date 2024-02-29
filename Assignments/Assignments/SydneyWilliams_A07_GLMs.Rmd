@@ -1,5 +1,5 @@
 ---
-title: "Assignment 7: GLMs (Linear Regressios, ANOVA, & t-tests)"
+title: "Assignment 7: GLMs (Linear Regressions, ANOVA, & t-tests)"
 author: "Sydney Williams"
 date: "Spring 2024"
 output: pdf_document
@@ -40,7 +40,7 @@ library(lubridate)
 chemistry_physics_rawdata <- read_csv("Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv")
 
 # Converting date columns to objects
-chemistry_physics_rawdata$sampledate <- ymd(chemistry_physics_rawdata$sampledate)
+chemistry_physics_rawdata$sampledate <- mdy(chemistry_physics_rawdata$sampledate)
 
 #2
 # Set ggplot theme as default
@@ -71,28 +71,19 @@ Ha: There is a significant difference in mean lake temperature recorded during J
 # Filtering for only dates in July with specific columns and removing NAs
 july_data_2 <- chemistry_physics_rawdata %>%
      mutate(month = month(sampledate)) %>%
-     filter(month == 7) %>%
+     filter(month == "7") %>%
      select(lakename, year4,daynum, depth, temperature_C) %>%
      drop_na(c("depth", "temperature_C"))
     
-july_data_2
-
-
 #5
 # creating scatter plot of temperature by depth to visualize the relationship between them 
 # added a smoothed line to show linear model and limit temp values 
 # added other aesthetics to make plot look pretty and easy to read 
-july_scatter_plot <- ggplot(data = july_data_2, aes(x = depth, y = temperature_C)) +
-  geom_point(color = "purple", alpha = 0.5) +  
-  geom_smooth(method = "lm", se = FALSE, color = "red") +  
+july_scatter_plot <- ggplot(july_data_2, aes(x = depth, y = temperature_C)) +
+  geom_point(aes(color = lakename)) +  
+  geom_smooth(method = "lm") +  
   labs(x = "Depth", y = "Temperature (°C)",  # Axes labels
-       title = "Relationship between Depth and Temperature",  
-       caption = "Data Source: NTL-LTER dataset") + 
-  theme_minimal() +  # Minimal theme
-  theme(plot.title = element_text(size = 16, face = "bold"), 
-        axis.title = element_text(size = 14),  
-        axis.text = element_text(size = 12),  
-        legend.position = "none") + 
+       title = "Relationship between Depth and Temperature") + 
   ylim(limits = c(0, 35))
 
 july_scatter_plot
@@ -135,16 +126,16 @@ Let's tackle a similar question from a different approach. Here, we want to expl
 ```{r temperature.model}
 #9
 # Run AIC to determine set of explanatory variables is best suited to predict temperature
-temperature.model <- step(lm(temperature_C ~ year4 + daynum + depth, data = july_data_2))
+temperature.model <- step(lm(data = july_data_2,temperature_C ~ year4 + daynum + depth))
 
 summary(temperature.model)
 
 
 #10
 # Run multiple regression on recommended set of variables
-NTERbest.regression <- lm(temperature_C ~ year4 + daynum, data = july_data_2)
+best.regression <- lm(temperature_C ~ year4 + daynum, data = july_data_2)
 
-summary(NTERbest.regression)
+summary(best.regression)
 
 
 
@@ -183,17 +174,12 @@ summary(July.linear)
 
 ```{r scatterplot.2}
 #14.
+#Creating graph that depicts temperature by depth with separate color for each lake 
 scatter_plot_2 <- ggplot(data = july_data_2, aes(x = depth, y = temperature_C, color = lakename)) +
   geom_point(alpha = 0.5) + 
   geom_smooth(method = "lm", se = FALSE) +  
-  scale_color_brewer(palette = "Set1") +  
   labs(x = "Depth", y = "Temperature (°C)", 
-       title = "Temperature by Depth for Different Lakes in July", 
-       caption = "Data Source: NTL-LTER dataset") +  
-  theme_minimal() +  # Minimal theme
-  theme(plot.title = element_text(size = 16, face = "bold"), 
-        axis.title = element_text(size = 14),  
-        axis.text = element_text(size = 12)) +  
+       title = "Temperature by Depth for Different Lakes in July") +  
   ylim(0, 35)  
 
 # Display the plot
@@ -225,15 +211,8 @@ tukey_test
 july_data_crampton_ward <- july_data_2 %>%
   filter(lakename %in% c("Crampton Lake", "Ward Lake"))
 
-# Subset temperature data for each lake
-temperature_crampton <- july_data_crampton_ward$temperature_C[july_data_crampton_ward$lakename == "Crampton Lake"]
-temperature_ward <- july_data_crampton_ward$temperature_C[july_data_crampton_ward$lakename == "Ward Lake"]
+t.test(july_data_crampton_ward$temperature_C ~ july_data_crampton_ward$lakename)
 
-# Perform two-sample t-test
-t_test_result <- t.test(temperature_crampton, temperature_ward)
-
-# Print t-test result
-print(t_test_result)
 ```
 
->Answer: The mean temperatures for Crampton Lake and Ward Lake are similar with Crampton with a mean of 14 degrees and Ward with a mean of 12 degrees. 
+>Answer: The degrees of freedom is 200.37. The p-value is 0.2649. The p-value is more that 0.05 so the null hypothesis that their means are equal is not rejected or they are statistically the same. The means for both lakes are similar with Crampton Lake at 15.35189 and Ward Lake at 14.45862. This corresponds with the results of the Tukey HSD test where the p value is more than 0.05 and the difference in mean is not significant. 
