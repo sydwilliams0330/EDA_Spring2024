@@ -175,10 +175,8 @@ GaringerOzone.daily.ts <- ts(GaringerOzone$Daily.Max.8.hour.Ozone.Concentration.
 # Creating time series object for monthly average ozone values
 GaringerOzone.monthly.ts <- ts(GaringerOzone.monthly$mean_ozone,
                                start = c(year(first(GaringerOzone.monthly$Date)),
-                                         month(first(GaringerOzone.monthly$Date))),                 
+                                         month(first(GaringerOzone.monthly$Date))),               
                                frequency = 12)
-
-
 ```
 
 
@@ -211,7 +209,7 @@ plot(ozonemonthly_decomposed)
 
 monthly_Ozone<- Kendall::SeasonalMannKendall(GaringerOzone.monthly.ts) 
 
-
+summary(monthly_Ozone)
 
 ```
 
@@ -249,12 +247,10 @@ ozonemonthly_nonseasonalcomponents  <-
 
 ozonemonthly_nonseasonalcomponents_ts <- ts(ozonemonthly_nonseasonalcomponents[,1:3], frequency = 12)
 
-
 #16
 
 # Running Mann-Kendall trend test on the non-seasonal ozone monthly series
 non_seasonal_ozone <- MannKendall(ozonemonthly_nonseasonalcomponents_ts)
-
 
 ```
 
